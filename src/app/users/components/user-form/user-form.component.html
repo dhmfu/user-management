@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>{{ title }}</h1>
+
+<form mat-dialog-content #form="ngForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Username</mat-label>
+    <input matInput placeholder="Placeholder" name="username" required [(ngModel)]="user.username">
+  </mat-form-field>
+
+  <div>
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid"
+    >
+      Create User
+    </button>
+  </div>
+</form>

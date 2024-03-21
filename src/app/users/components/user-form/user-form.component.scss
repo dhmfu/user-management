@@ -1,0 +1,13 @@
+mat-form-field {
+  display: block;
+  width: 100%;
+}
+
+.password-incorrect.ng-touched {
+  margin-bottom: 1rem;
+}
+
+.new-user-actions {
+  display: flex;
+  justify-content: center;
+}

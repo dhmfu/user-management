@@ -1,17 +1,89 @@
 <h1 mat-dialog-title>{{ title }}</h1>
 
 <form mat-dialog-content #form="ngForm" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="fill">
     <mat-label>Username</mat-label>
-    <input matInput placeholder="Placeholder" name="username" required [(ngModel)]="user.username">
+    <input
+      #username="ngModel"
+      matInput
+      name="username"
+      required
+      [(ngModel)]="user.username"
+      [ngModelOptions]="{ updateOn: 'blur' }"
+      appUsernameTaken
+    >
+    <mat-spinner *ngIf="username.pending" matSuffix diameter="20"></mat-spinner>
   </mat-form-field>
 
-  <div>
+  <mat-form-field appearance="fill">
+    <mat-label>First Name</mat-label>
+    <input matInput name="first-name" required [(ngModel)]="user.firstName">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Last Name</mat-label>
+    <input matInput name="last-name" required [(ngModel)]="user.lastName">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <span matPrefix><mat-icon>alternate_email</mat-icon></span>
+    <input #email="ngModel" matInput name="email" required email [(ngModel)]="user.email">
+    <mat-error *ngIf="email.hasError('email')">
+      Please specify a correct email address
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Type</mat-label>
+    <mat-select name="type" required [(ngModel)]="user.type">
+      <mat-option *ngFor="let type of types" [value]="type">
+        {{ type }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field
+    appearance="fill"
+    [class.password-incorrect]="password.hasError('pattern')"
+  >
+    <mat-label>Password</mat-label>
+    <input
+      #password="ngModel"
+      matInput
+      name="password"
+      type="password"
+      required
+      pattern="^(?=.*[a-zA-Z])(?=.*\d).{8,}$"
+      [(ngModel)]="user.password"
+    >
+    <mat-error *ngIf="password.hasError('pattern')">
+      Password must contain at least one letter, at least one number and be at least 8 characters long
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Repeat password</mat-label>
+    <input
+      #repeatPassword="ngModel"
+      matInput
+      name="repeat-password"
+      type="password"
+      required
+      [appSameValueValidator]="password.control"
+      [(ngModel)]="user.repeatPassword"
+    >
+    <mat-error *ngIf="repeatPassword.hasError('valueMismatch')">
+      Passwords don't match
+    </mat-error>
+  </mat-form-field>
+
+  <div *ngIf="isNewUser" class="new-user-actions">
     <button
       mat-flat-button
       color="primary"
       type="submit"
-      [disabled]="form.invalid"
+      [disabled]="form.invalid || username.pending"
     >
       Create User
     </button>

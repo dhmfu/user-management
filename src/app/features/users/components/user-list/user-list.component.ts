@@ -52,8 +52,8 @@ export class UserListComponent implements OnInit {
       }
     );
 
-    dialogRef.afterClosed().subscribe(success => {
-      if (success) {
+    dialogRef.afterClosed().subscribe(changed => {
+      if (changed) {
         this.loadingUsers = true;
 
         this.usersService.reloadUsers();

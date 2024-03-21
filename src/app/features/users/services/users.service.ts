@@ -23,6 +23,9 @@ export class UsersService {
 
   createUser(userData: UserFormData): Observable<User> {
     return of(userData).pipe(
+      tap(() => {
+        this.simulateErrorRandomly();
+      }),
       delay(1500),
       map(userData => {
         const { repeatPassword, ...user } = userData;
@@ -37,6 +40,9 @@ export class UsersService {
 
   deleteUser(deletedUser: User): Observable<void> {
     return of(undefined).pipe(
+      tap(() => {
+        this.simulateErrorRandomly();
+      }),
       delay(1500),
       tap(() => {
         this.users = this.users.filter(user => user !== deletedUser);
@@ -46,6 +52,9 @@ export class UsersService {
 
   editUser(userData: UserFormData, editedUser: User): Observable<User> {
     return of(userData).pipe(
+      tap(() => {
+        this.simulateErrorRandomly();
+      }),
       delay(1500),
       map(({ repeatPassword, ...user }) => ({ ...editedUser, ...user })),
       tap(user => {
@@ -72,5 +81,11 @@ export class UsersService {
 
   private fetchUsers(): Observable<User[]> {
     return of([...this.users]).pipe(delay(2000));
+  }
+
+  private simulateErrorRandomly(): void | never {
+    if (new Date().getSeconds() % 3 === 0) {
+      throw new Error('simulated');
+    }
   }
 }

@@ -1,10 +1,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 import { UserType } from '../../enums/user-type.enum';
 import { UserFormData } from '../../models/user-form-data.interface';
 import { User } from '../../models/user.interface';
 import { UsersService } from '../../services/users.service';
-import { Subscription, of } from 'rxjs';
 
 @Component({
   selector: 'app-user-form',
@@ -26,7 +27,8 @@ export class UserFormComponent implements OnInit, OnDestroy {
   constructor(
     private dialogRef: MatDialogRef<UserFormComponent, boolean>,
     @Inject(MAT_DIALOG_DATA) private dialogData: User | null,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
@@ -45,32 +47,46 @@ export class UserFormComponent implements OnInit, OnDestroy {
   onDelete(): void {
     this.deleting = true;
 
-    this.usersService.deleteUser(this.dialogData!).subscribe(() => {
+    this.usersService.deleteUser(this.dialogData!).subscribe({
+      next: () => {
+        this.dialogRef.close(true);
+  
+        this.toastr.success('User was successfully deleted');
+      },
+      error: () => {
+        this.deleting = false;
 
-      this.dialogRef.close(true);
+        this.toastr.error('An error occured, please try again');
+      }
     })
   }
 
   onSubmit(): void {
     this.saving = true;
 
-    if (this.isNewUser) {
-      this.createNewUser();
-    } else {
-      this.editUser();
-    }
+    const action$ = this.isNewUser ? this.createNewUser() : this.editUser();
+    const actionMessage = this.isNewUser ? 'created' : 'updated';
+    
+    action$.subscribe({
+      next: () => {
+        this.dialogRef.close(true);
+  
+        this.toastr.success(`User was successfully ${actionMessage}`);
+      },
+      error: () => {
+        this.saving = false;
+
+        this.toastr.error('An error occured, please try again');
+      }
+    })
   }
 
-  private createNewUser(): void {
-    this.usersService.createUser(this.userModel).subscribe(() => {
-      this.dialogRef.close(true);
-    });
+  private createNewUser(): Observable<User> {
+    return this.usersService.createUser(this.userModel);
   }
 
-  private editUser(): void {
-    this.usersService.editUser(this.userModel, this.dialogData!).subscribe(() => {
-      this.dialogRef.close(true);
-    });
+  private editUser(): Observable<User> {
+    return this.usersService.editUser(this.userModel, this.dialogData!);
   }
 
   private currentUserInit(user: User): void {

@@ -11,7 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UsersRoutingModule } from './users-routing.module';
-import { SameValueValidatorDirective } from '../shared/directives/same-value-validator.directive';
+import { SameValueValidatorDirective } from '../../shared/directives/same-value-validator.directive';
 import { UsernameTakenDirective } from './directives/username-taken.directive';
 
 

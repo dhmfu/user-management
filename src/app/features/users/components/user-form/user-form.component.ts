@@ -1,21 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-
-
-enum UserType {
-  Admin = 'Admin',
-  Driver = 'Driver'
-}
-
-interface User {
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string | null;
-  type: UserType | null;
-  password: string | null;
-  repeatPassword: string | null;
-}
+import { UserType } from '../../enums/user-type.enum';
+import { User } from '../../models/user.interface';
 
 @Component({
   selector: 'app-user-form',

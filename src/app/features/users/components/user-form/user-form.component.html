@@ -13,6 +13,9 @@
       appUsernameTaken
     >
     <mat-spinner *ngIf="username.pending" matSuffix diameter="20"></mat-spinner>
+    <mat-error *ngIf="username.hasError('usernameTaken')">
+      This username is already taken.
+    </mat-error>
   </mat-form-field>
 
   <mat-form-field appearance="fill">

@@ -1,6 +1,8 @@
 import { Directive, forwardRef } from '@angular/core';
 import { AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors } from '@angular/forms';
-import { Observable, delay, of } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { UsersService } from '../services/users.service';
 
 @Directive({
   selector: '[appUsernameTaken]',
@@ -14,10 +16,12 @@ import { Observable, delay, of } from 'rxjs';
   ]
 })
 export class UsernameTakenDirective implements AsyncValidator {
-  constructor() { }
+  constructor(private usersService: UsersService) { }
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
-    return of(null).pipe(delay(2000));
+    return this.usersService.checkUsernameTaken(control.value).pipe(
+      map(taken => taken ? { usernameTaken: true } : null)
+    );
   }
 
 }

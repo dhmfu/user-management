@@ -1,3 +1,19 @@
 :host {
   display: block;
+  padding: 1rem;
+}
+
+.create-user-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+}
+
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
 }

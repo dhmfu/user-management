@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 import { SameValueValidatorDirective } from '../../shared/directives/same-value-validator.directive';
 import { UserFormComponent } from './components/user-form/user-form.component';
 import { UserListComponent } from './components/user-list/user-list.component';
@@ -30,6 +31,7 @@ import { UsersRoutingModule } from './users-routing.module';
     MatIconModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatTableModule,
     SameValueValidatorDirective,
     UsernameTakenDirective,
     FormsModule

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { UserFormComponent } from '../user-form/user-form.component';
+import { User } from '../../models/user.interface';
+import { UsersService } from '../../services/users.service';
+import { Observable, tap } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -8,10 +11,27 @@ import { UserFormComponent } from '../user-form/user-form.component';
   styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements OnInit {
+  users$!: Observable<User[]>;
 
-  constructor(public dialog: MatDialog) { }
+  loadingUsers = true;
+
+  readonly columns: (keyof User)[] = [
+    'username',
+    'firstName',
+    'lastName',
+    'email',
+    'type'
+  ];
+
+  constructor(
+    private dialog: MatDialog,
+    private usersService: UsersService
+  ) { }
 
   ngOnInit(): void {
+    this.users$ = this.usersService.getUsers().pipe(
+      tap(() => this.loadingUsers = false)
+    );
   }
 
   onCreateUser(): void {
@@ -19,8 +39,12 @@ export class UserListComponent implements OnInit {
       width: '500px'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
+    dialogRef.afterClosed().subscribe(success => {
+      if (success) {
+        this.loadingUsers = true;
+
+        this.usersService.reloadUsers();
+      }
     });
   }
 

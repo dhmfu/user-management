@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { UserType } from '../../enums/user-type.enum';
-import { User } from '../../models/user.interface';
+import { UserFormData } from '../../models/user-form-data.interface';
+import { UsersService } from '../../services/users.service';
 
 @Component({
   selector: 'app-user-form',
@@ -11,23 +12,32 @@ import { User } from '../../models/user.interface';
 export class UserFormComponent implements OnInit {
   title = 'Create new user';
 
-  user!: User;
+  user!: UserFormData;
 
   isNewUser = true;
 
+  saving = false;
+
   readonly types: UserType[] = [UserType.Admin, UserType.Driver];
 
-  constructor(private dialogRef: MatDialogRef<UserFormComponent>) { }
+  constructor(
+    private dialogRef: MatDialogRef<UserFormComponent>,
+    private usersService: UsersService
+  ) { }
 
   ngOnInit(): void {
     this.user = this.createBlankUser();
   }
 
   onSubmit(): void {
-    this.dialogRef.close(this.user);
+    this.saving = true;
+
+    this.usersService.createUser(this.user).subscribe(result => {
+      this.dialogRef.close(true);
+    });
   }
 
-  private createBlankUser(): User {
+  private createBlankUser(): UserFormData {
     return {
       username: null,
       firstName: null,

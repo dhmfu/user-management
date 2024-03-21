@@ -8,7 +8,6 @@ export const mockUsers: User[] = [
     lastName: 'One',
     email: 'admin@one',
     type: UserType.Admin,
-    password: 'qwert1ui',
-    repeatPassword: 'qwert1ui'
+    password: 'qwert1ui'
   }
 ];

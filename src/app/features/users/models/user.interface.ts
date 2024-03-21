@@ -7,5 +7,4 @@ export interface User {
   email: string | null;
   type: UserType | null;
   password: string | null;
-  repeatPassword: string | null;
 }

@@ -35,9 +35,22 @@ export class UserListComponent implements OnInit {
   }
 
   onCreateUser(): void {
-    const dialogRef = this.dialog.open(UserFormComponent, {
-      width: '500px'
-    });
+    this.openUserDialog(null);
+  }
+
+  onUserClick(user: User): void {
+    this.openUserDialog(user);
+  }
+
+  private openUserDialog(user: User | null): void {
+    const dialogRef = this.dialog.open<UserFormComponent, User | null, boolean>(
+      UserFormComponent,
+      {
+        width: '500px',
+        autoFocus: false,
+        data: user
+      }
+    );
 
     dialogRef.afterClosed().subscribe(success => {
       if (success) {
@@ -47,5 +60,4 @@ export class UserListComponent implements OnInit {
       }
     });
   }
-
 }

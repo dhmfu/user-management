@@ -11,6 +11,11 @@
 
 table {
   width: 100%;
+
+  tr.user-row:hover {
+    background: rgba(0, 0, 0, .04);
+    cursor: pointer;
+  }
 }
 
 .spinner-wrapper {

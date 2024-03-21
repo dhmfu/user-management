@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, of } from 'rxjs';
-import { delay, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { delay, map, switchMap, tap } from 'rxjs/operators';
 import { mockUsers } from '../mocks/mockUsers';
-import { User } from '../models/user.interface';
 import { UserFormData } from '../models/user-form-data.interface';
+import { User } from '../models/user.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsersService {
-  private usersState$ = new BehaviorSubject<User[]>([]);
   private fetchTrigger$ = new BehaviorSubject<void>(undefined);
+
+  private users = [...mockUsers];
 
   constructor() { }
 
@@ -29,9 +30,34 @@ export class UsersService {
         return user;
       }),
       tap(user => {
-        mockUsers.push(user);
+        this.users = [...this.users, user];
       })
     );
+  }
+
+  deleteUser(deletedUser: User): Observable<void> {
+    return of(undefined).pipe(
+      delay(1500),
+      tap(() => {
+        this.users = this.users.filter(user => user !== deletedUser);
+      })
+    );
+  }
+
+  editUser(userData: UserFormData, editedUser: User): Observable<User> {
+    return of(userData).pipe(
+      delay(1500),
+      map(({ repeatPassword, ...user }) => ({ ...editedUser, ...user })),
+      tap(user => {
+        this.users = this.users.map(dbUser => {
+          if (dbUser === editedUser) {
+            return user;
+          }
+
+          return dbUser;
+        })
+      })
+    )
   }
 
   getUsers(): Observable<User[]> {
@@ -45,6 +71,6 @@ export class UsersService {
   }
 
   private fetchUsers(): Observable<User[]> {
-    return of([...mockUsers]).pipe(delay(2000));
+    return of([...this.users]).pipe(delay(2000));
   }
 }

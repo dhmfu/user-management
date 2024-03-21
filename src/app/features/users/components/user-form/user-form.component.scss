@@ -1,3 +1,9 @@
+[mat-dialog-title] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 mat-form-field {
   display: block;
   width: 100%;
@@ -10,4 +16,9 @@ mat-form-field {
 .new-user-actions {
   display: flex;
   justify-content: center;
+}
+
+.existing-user-actions {
+  display: flex;
+  justify-content: space-between;
 }
